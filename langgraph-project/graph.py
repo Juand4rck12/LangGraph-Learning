@@ -2,6 +2,7 @@ from langgraph.graph import StateGraph, START
 from langgraph.prebuilt import ToolNode, tools_condition
 from config import tools, memory, llm_with_tools
 from state import State
+from IPython.display import Image, display
 
 def build_graph() -> StateGraph:
     # Crear grafo de estado basado en la estructura de State
@@ -27,4 +28,13 @@ def build_graph() -> StateGraph:
     graph_builder.add_edge(START, "chatbot")
 
     # Compilar el grafo con almacenamiento en memoria para persistencia
-    return graph_builder.compile(checkpointer=memory)
+    graph = graph_builder.compile(checkpointer=memory)
+    
+    try:
+        png_data = graph.get_graph().draw_mermaid_png()
+        with open("grah_diagram.png", "wb") as f:
+            f.write(png_data)
+    except:
+        pass
+
+    return graph
